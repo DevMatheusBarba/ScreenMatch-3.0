@@ -18,6 +18,10 @@ public class Episodio {
     private double avaliacao;
     private LocalDate dataLancamento;
 
+    public Serie getSerie() {
+        return serie;
+    }
+
     @ManyToOne
     private Serie serie;
 
