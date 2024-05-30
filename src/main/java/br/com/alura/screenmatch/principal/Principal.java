@@ -44,6 +44,7 @@ public class Principal {
                 9 - Buscar episodio por trecho
                 10 - Top 5 Episodios por serie
                 11 - Top 5 Episodios de serie por temporada
+                12 - Buscar episodio a partir de uma data
                                 
                 0 - Sair                                 
                 """;
@@ -86,6 +87,9 @@ public class Principal {
                 case 11:
                     topEpisodiosPorSerieETemporada();
                     break;
+                case 12:
+                    buscarEpisodiosPorSerieEData();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -94,7 +98,6 @@ public class Principal {
             }
         } while (opcao != 0);
     }
-
 
 
     private void buscarSerieWeb() {
@@ -226,7 +229,7 @@ public class Principal {
 
     private void top5PorSerie() {
         buscarSeriePorTitulo();
-        if (serieBusca.isPresent()){
+        if (serieBusca.isPresent()) {
             Serie serie = serieBusca.get();
             List<Episodio> episodiosEncontrados = repositorio.top5Episodios(serie);
             episodiosEncontrados.forEach(e -> System.out.printf("Serie: %s Temporada: %s - Episodio %s - %s - Avaliação %s\n",
@@ -237,18 +240,31 @@ public class Principal {
 
     private void topEpisodiosPorSerieETemporada() {
         buscarSeriePorTitulo();
-        if (serieBusca.isPresent()){
+        if (serieBusca.isPresent()) {
             Serie serie = serieBusca.get();
-            System.out.printf("Total de %d temporadas da serie %s\n",serie.getTotalTemporadas(), serie.getTitulo());
+            System.out.printf("Total de %d temporadas da serie %s\n", serie.getTotalTemporadas(), serie.getTitulo());
             System.out.println("Qual temporada deseja ver o top 5?");
             var temporadaSelecionada = leitura.nextInt();
-            List<Episodio> episodiosEncontrados = repositorio.top5EpisodiosPorTemporada(serie,temporadaSelecionada);
+            List<Episodio> episodiosEncontrados = repositorio.top5EpisodiosPorTemporada(serie, temporadaSelecionada);
             episodiosEncontrados.forEach(e -> System.out.printf("Serie: %s Temporada: %s - Episodio %s - %s - Avaliação %s\n",
                     e.getSerie().getTitulo(), e.getTemporada(), e.getNumeroEpisodio(), e.getTitulo(), e.getAvaliacao()));
         }
 
     }
 
+    private void buscarEpisodiosPorSerieEData() {
+        buscarSeriePorTitulo();
+        if (serieBusca.isPresent()) {
+            Serie serie = serieBusca.get();
+            System.out.println("A partir de qual ano deseja buscar os episódios");
+            var anoBuscado = leitura.nextInt();
+            leitura.nextLine();
+            List<Episodio> episodiosEncontrados = repositorio.buscarEpisodiosPorSerieEData(serie, anoBuscado);
+            episodiosEncontrados.forEach(e -> System.out.printf("Serie: %s Temporada: %s - Episodio %s - %s - Ano %s\n",
+                    e.getSerie().getTitulo(), e.getTemporada(), e.getNumeroEpisodio(), e.getTitulo(), e.getDataLancamento()));
+
+        }
+    }
 
 
 }
